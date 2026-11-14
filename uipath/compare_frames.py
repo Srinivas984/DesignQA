@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from compare_styles import compare
 from diff import visual_diff
 from report import build_html, build_xlsx
+from group_findings import group_frame_findings
 
 
 def tokens(node, frame):
@@ -74,18 +75,24 @@ def run(directory, *, json_only=False):
     for finding in findings:
         if finding["category"] == "Missing":
             finding["actual"] = "Not found in comparison frame"
+    raw_findings = [dict(finding) for finding in findings]
+    findings = group_frame_findings(findings, mapping, reference, actual)
     visual = visual_diff(directory / "images/design.png", directory / "images/comparison.png", directory / "images/diff.png")
     if not visual["pass"]:
-        findings.append({"page": page, "breakpoint": reference["width"],
+        visual_finding = {"page": page, "breakpoint": reference["width"],
                          "label": "Whole frame", "category": "Visual", "property": "Pixel similarity (SSIM)",
-                         "expected": ">= 0.97", "actual": str(visual["ssim"]), "severity": "Medium"})
+                         "expected": ">= 0.97", "actual": str(visual["ssim"]), "severity": "Medium", "related": ""}
+        findings.append(visual_finding)
+        raw_findings.append(dict(visual_finding))
     result = {"page": page, "breakpoint": reference["width"],
               "status": "FAIL" if any(f["severity"] in {"High", "Medium"} for f in findings) else "PASS",
               "url": f"https://www.figma.com/design/{source['fileKey']}",
               "threshold": .97, "findings": findings,
+              "raw_findings": raw_findings,
               "images": {"design": "images/design.png", "live": "images/comparison.png", "diff": "images/diff.png"},
               "coverage": [f"Reference frame {reference['id']}; comparison frame {actual['id']}.",
                            f"{len(mapping)} uniquely identified text, button or contextual icon layers checked. Repeated and generic layers are unverified.",
+                           "Typography dimensions and consistent downstream flow shifts are grouped as related measurements. Independent shifts remain separate.",
                            "Both sources are Figma frames. Website DOM, CSS, colour, border and spacing checks are unverified."],
               **{key: value for key, value in visual.items() if key != "pass"}}
     provenance = {"Source": result["url"], "Mode": "Figma frame versus Figma frame",

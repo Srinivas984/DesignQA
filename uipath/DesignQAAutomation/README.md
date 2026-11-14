@@ -2,7 +2,11 @@
 
 Open `project.json`, then open `Main.xaml` and press **Run**. The Studio workflow is the primary interface. FastAPI and the React website are optional.
 
-Main now asks for exactly two inputs: the Figma reference-frame link and the corresponding deployed website URL. Select the intended frame in Figma and use **Copy link to selection**. Its width is used automatically. A page link with multiple possible frames is rejected with guidance to copy the frame link. The website URL comes from your implementation's hosting dashboard or developer. A Figma prototype link cannot supply the website DOM used for CSS validation.
+Main asks for two URLs: the Figma design/file link and corresponding deployed website link. A frame-specific link selects that frame. Known file defaults are recorded in `config/figma_frames.json`. For another file containing several eligible frames, Main opens a picker with their names, sizes and IDs. Choose the reference and click **Compare**. Cancel stops the run. The chosen frame sets the viewport dimensions. The website URL comes from your implementation's hosting dashboard or developer.
+
+The frame-comparison report groups typography dimensions and position changes that follow the measured heading-height change within the same container. **Findings** lists the primary checks and related measurements. **Measurements** retains every original finding, and **Summary** shows both counts. Independent position changes remain separate. Grouping expresses an observed layout relationship and does not prove the implementation's CSS cause. Main's live website measurements continue to use the existing comparison rules.
+
+Supported inputs are accessible Figma Design or File URLs and public HTTP(S) websites. File permissions, token validity, network availability and screenshot limits still apply. Login-protected websites and Figma prototype URLs are outside this workflow. Generic or ambiguous layers may remain unmapped and appear as unverified coverage.
 
 Configure `FIGMA_TOKEN` once as a Windows user environment variable. The bridge reads that value even when Studio was started earlier. The Figma plugin connection in this chat provides access for chat tools independently of the local Robot.
 
@@ -13,6 +17,13 @@ For the connected Flipkart Figma export verification, open `FigmaFrameComparison
 The optional website's Demo Analysis still runs the Brewly baseline and seeded variant at 1440 px and 375 px. Main is dedicated to the two-link workflow.
 
 ## Figma and a live website
+
+Verified example inputs for Main:
+
+- Figma reference frame: https://www.figma.com/design/jBFz1c5xbu8mYP7FCSdQwE/Untitled?node-id=1-2
+- Published website: https://boar-serve-28825024.figma.site
+
+The original page link contains two frames. The frame-specific link above selects the reference at 858 px. Main now uses both its width and height for the live viewport. QA differences are a completed run, and appear as FAIL in the report when they exceed severity rules.
 
 Set `FIGMA_TOKEN` in the environment inherited by Studio and its Robot before starting a run. Use a token with file content read access. Keep the token out of the dialogs and workbook. Paste the selected reference-frame URL and the implemented website URL into the two dialogs. The frame width is selected automatically. If the page has several frames, copy the intended frame link before running.
 

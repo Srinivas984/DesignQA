@@ -90,8 +90,8 @@ def _process_once(row, settings, mapping, run_dir, notify, capture_page):
     hide = [h.strip() for h in str(settings.get("HideSelectors") or "").split(",") if h.strip()]
     notify("capture")
     live = capture_page(to_url(row["LiveURL"]), bp, live_png,
-                   [{"label": m["Label"], "css": m["CssSelector"]} for m in maprows],
-                   hide, int(settings["TimeoutMs"]))
+                   [{"label": m["Label"], "css": m["CssSelector"], "text_only": bool(m.get("TextOnly"))} for m in maprows],
+                   hide, int(settings["TimeoutMs"]), viewport_height=int(row.get("ViewportHeight") or 900))
 
     # 3) visual diff + 4) style/layout diff
     notify("visual")

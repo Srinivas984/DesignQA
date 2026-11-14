@@ -10,12 +10,32 @@ import sys
 
 from common import BusinessError, SystemFault, log, rgb_to_hex, px, norm_weight
 
-JS_STYLE = """(sel) => {
+JS_STYLE = """(input) => {
+  const sel = typeof input === 'string' ? input : input.css;
   const el = document.querySelector(sel);
   if (!el) return null;
-  const s = getComputedStyle(el), r = el.getBoundingClientRect();
+  const s = getComputedStyle(el);
+  let r = el.getBoundingClientRect();
+  if (input.text_only && !/^(H[1-6]|P)$/.test(el.tagName)) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), ranges = [];
+    while (walker.nextNode()) {
+      const n = walker.currentNode;
+      if (!n.textContent.trim() || n.parentElement.closest('svg')) continue;
+      const range = document.createRange(); range.selectNodeContents(n); ranges.push(range.getBoundingClientRect());
+    }
+    if (ranges.length) {
+      const x = Math.min(...ranges.map(r => r.x)), y = Math.min(...ranges.map(r => r.y));
+      r = {x, y, width: Math.max(...ranges.map(r => r.right)) - x, height: Math.max(...ranges.map(r => r.bottom)) - y};
+    }
+  }
+  const color = value => {
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+    const context = canvas.getContext('2d'); context.fillStyle = value; context.fillRect(0,0,1,1);
+    const [r,g,b,a] = context.getImageData(0,0,1,1).data;
+    return 'rgba(' + [r,g,b,a / 255].join(',') + ')';
+  };
   return {fontFamily: s.fontFamily, fontSize: s.fontSize, fontWeight: s.fontWeight,
-          color: s.color, bg: s.backgroundColor, radius: s.borderTopLeftRadius,
+          color: color(s.color), bg: color(s.backgroundColor), radius: s.borderTopLeftRadius,
           x: r.x + scrollX, y: r.y + scrollY, w: r.width, h: r.height};
 }"""
 
@@ -74,7 +94,7 @@ def capture(url, width, out_png, selectors, hide=(), timeout_ms=30000, viewport_
                     raise BusinessError("The page exceeds the web screenshot height limit")
                 page.screenshot(path=str(out_png), full_page=True)
                 for s in selectors:
-                    styles[s["label"]] = normalise(page.evaluate(JS_STYLE, s["css"]))
+                    styles[s["label"]] = normalise(page.evaluate(JS_STYLE, s))
             finally:
                 browser.close()
     except (BusinessError, SystemFault):

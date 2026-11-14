@@ -84,11 +84,11 @@ def write_config(path, pages, mappings, hide, *, retries=1):
     book = Workbook()
     page = book.active
     page.title = "Pages"
-    page.append(["Enabled", "PageName", "Breakpoint", "LiveURL", "Threshold", "DesignImage", "DesignStyles"])
+    page.append(["Enabled", "PageName", "Breakpoint", "LiveURL", "Threshold", "DesignImage", "DesignStyles", "ViewportHeight"])
     for row in pages:
         page.append(row)
     mapping = book.create_sheet("Mapping")
-    mapping.append(["PageName", "Breakpoint", "Label", "FigmaNodeId", "CssSelector"])
+    mapping.append(["PageName", "Breakpoint", "Label", "FigmaNodeId", "CssSelector", "TextOnly"])
     for row in mappings:
         mapping.append(row)
         for cell in mapping[mapping.max_row]:
@@ -147,7 +147,7 @@ def analyze(job, session, root, stage, save):
                         continue
                     label = f"{row['label']} [{row['node_id']}]"
                     reference[label] = extract_tokens(nodes[row["node_id"]], frame["absoluteBoundingBox"])
-                    mappings.append([name, width, label, row["node_id"], css])
+                    mappings.append([name, width, label, row["node_id"], css, nodes[row["node_id"]]["type"] == "TEXT"])
                 total = sum(row["breakpoint"] == width for row in session["proposals"])
                 coverage[width] = [f"{len(reference)} of {total} candidate layers mapped. Unmapped layers and unavailable properties are unverified.",
                                    f"Figma frame {frame['name']} ({frame_id}), {frame['absoluteBoundingBox']['width']:g} px wide.", UNSUPPORTED]

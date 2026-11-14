@@ -63,7 +63,7 @@ def extract_tokens(node, frame_box):
     """One Figma node -> the normalised token dict used by compare_styles."""
     txt = _first_text(node)
     tok = {"fontFamily": None, "fontSize": None, "fontWeight": None, "color": None,
-           "bg": None, "radius": node.get("cornerRadius", 0) or 0}
+           "bg": None, "radius": None if node.get("type") == "TEXT" else node.get("cornerRadius", 0) or 0}
     if txt:
         st = txt.get("style", {})
         tok.update(fontFamily=st.get("fontFamily"), fontSize=st.get("fontSize"),

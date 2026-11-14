@@ -30,6 +30,55 @@ def configured_token():
     return token
 
 
+def choose_frame(frames):
+    """Ask the attended Studio user which frame is the comparison reference."""
+    import tkinter as tk
+    from tkinter import ttk
+
+    window = tk.Tk()
+    window.title("DesignQA — choose the reference design")
+    window.attributes("-topmost", True)
+    window.geometry("720x420")
+    selected = []
+    ttk.Label(window, text="This Figma link contains several designs. Choose the one matching your website.",
+              wraplength=680).pack(padx=16, pady=14, anchor="w")
+    container = ttk.Frame(window)
+    container.pack(fill="both", expand=True, padx=16)
+    scrollbar = ttk.Scrollbar(container)
+    scrollbar.pack(side="right", fill="y")
+    listing = tk.Listbox(container, exportselection=False, yscrollcommand=scrollbar.set)
+    listing.pack(side="left", fill="both", expand=True)
+    scrollbar.config(command=listing.yview)
+    for frame in frames:
+        listing.insert("end", f"{frame['name']} — {frame['width']} × {frame['height']} px — {frame['id']}")
+    status = ttk.Label(window, text="Select a frame, then click Compare.")
+    status.pack(padx=16, pady=8, anchor="w")
+
+    def confirm():
+        selection = listing.curselection()
+        if not selection:
+            status.config(text="Please select a frame from the list.")
+            return
+        selected.append(frames[selection[0]])
+        window.destroy()
+
+    actions = ttk.Frame(window)
+    actions.pack(fill="x", padx=16, pady=(0, 16))
+    ttk.Button(actions, text="Cancel", command=window.destroy).pack(side="right")
+    ttk.Button(actions, text="Compare", command=confirm).pack(side="right", padx=8)
+    listing.bind("<Double-Button-1>", lambda event: confirm())
+    try:
+        window.mainloop()
+    finally:
+        try:
+            window.destroy()
+        except tk.TclError:
+            pass
+    if not selected:
+        raise BusinessError("Frame selection was cancelled.")
+    return selected[0]
+
+
 def prepare(args):
     directory = Path(args.workbook).parent
     directory.mkdir(parents=True, exist_ok=True)
@@ -58,8 +107,21 @@ def prepare(args):
         frames = discover(key, preferred, token)
         if args.widths == "auto":
             chosen = next((frame for frame in frames if frame["id"] == preferred), None)
+            if chosen is None:
+                defaults_path = ROOT / "config/figma_frames.json"
+                defaults = json.loads(defaults_path.read_text(encoding="utf-8")) if defaults_path.exists() else {}
+                saved_id = defaults.get(key, {}).get("reference_frame")
+                # A frame-specific URL always wins. Defaults apply to a page URL.
+                if preferred in {None, "0:1"}:
+                    chosen = next((frame for frame in frames if frame["id"] == saved_id), None)
             if chosen is None and len(frames) == 1:
                 chosen = frames[0]
+            if chosen is None and getattr(args, "interactive_frames", False):
+                eligible = [frame for frame in frames if 320 <= frame["width"] <= 2560
+                            and 0 < frame.get("height", 0) <= 30000]
+                if not eligible:
+                    raise BusinessError("No frames within the supported screenshot dimensions were found.")
+                chosen = choose_frame(eligible)
             if chosen is None:
                 raise BusinessError("Select the reference frame inside Figma, choose Copy link to selection, and use that link. The supplied page link contains multiple possible frames.")
             if not 320 <= chosen["width"] <= 2560:
@@ -92,10 +154,11 @@ def prepare(args):
                 node = row["node_id"]
                 label = f"{row['label']} [{node}]"
                 tokens[label] = extract_tokens(layers[node], frame["absoluteBoundingBox"])
-                mappings.append(["Live website", width, label, node, row["selector"]])
+                mappings.append(["Live website", width, label, node, row["selector"], layers[node]["type"] == "TEXT"])
             coverage[width] = {"frame": frame_id, "mapped": len(tokens), "candidates": len(candidates)}
             styles.write_text(json.dumps(tokens), encoding="utf-8")
-            pages.append(["Y", "Live website", width, args.live, 0.97, str(image), str(styles)])
+            height = int(round(frame["absoluteBoundingBox"]["height"]))
+            pages.append(["Y", "Live website", width, args.live, 0.97, str(image), str(styles), height])
     write_config(Path(args.workbook), pages, mappings, [], retries=0)
     (directory / "coverage.json").write_text(json.dumps(coverage, indent=2), encoding="utf-8")
     print(json.dumps({"rows": len(pages), "mappings": len(mappings), "coverage": coverage}))
@@ -122,6 +185,7 @@ def main():
     parser.add_argument("--row", type=int)
     parser.add_argument("--out")
     parser.add_argument("--run-id")
+    parser.add_argument("--interactive-frames", action="store_true")
     for option in ("workbook", "figma", "live", "desktop-frame", "mobile-frame"):
         parser.add_argument("--" + option, default="")
     args = parser.parse_args()
@@ -137,3 +201,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

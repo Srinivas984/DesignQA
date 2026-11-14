@@ -55,6 +55,58 @@ class StudioInputTests(unittest.TestCase):
             with self.assertRaisesRegex(bridge.BusinessError, "Copy link to selection"):
                 bridge.prepare(self.arguments(directory, "0-1"))
 
+    def test_known_page_link_uses_saved_reference(self):
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(bridge, "live_url"),
+            patch.object(bridge, "configured_token", return_value="test-credential"),
+            patch.object(bridge, "discover", return_value=[
+                {"id": "1:2", "name": "Reference", "width": 858},
+                {"id": "1:554", "name": "Comparison", "width": 858}]),
+            patch.object(bridge, "fetch_frames", side_effect=bridge.SystemFault("Selected reference")) as fetch,
+        ):
+            args = self.arguments(directory, "0-1")
+            args.figma = args.figma.replace("/example/", "/jBFz1c5xbu8mYP7FCSdQwE/")
+            with self.assertRaisesRegex(bridge.SystemFault, "Selected reference"):
+                bridge.prepare(args)
+            self.assertEqual(fetch.call_args.args[1], ["1:2"])
+
+    def test_unknown_file_can_select_a_reference(self):
+        frames = [{"id": "8:1", "name": "Desktop", "width": 1440, "height": 900},
+                  {"id": "8:2", "name": "Mobile", "width": 375, "height": 812}]
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(bridge, "live_url"),
+            patch.object(bridge, "configured_token", return_value="test-credential"),
+            patch.object(bridge, "discover", return_value=frames),
+            patch.object(bridge, "choose_frame", return_value=frames[1]) as picker,
+            patch.object(bridge, "fetch_frames", side_effect=bridge.SystemFault("Selected reference")) as fetch,
+        ):
+            args = self.arguments(directory, "0-1")
+            args.interactive_frames = True
+            with self.assertRaisesRegex(bridge.SystemFault, "Selected reference"):
+                bridge.prepare(args)
+            picker.assert_called_once_with(frames)
+            self.assertEqual(fetch.call_args.args[1], ["8:2"])
+
+    def test_explicit_frame_skips_picker(self):
+        frames = [{"id": "1:2", "name": "Reference", "width": 858, "height": 718},
+                  {"id": "1:554", "name": "Comparison", "width": 858, "height": 718}]
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(bridge, "live_url"),
+            patch.object(bridge, "configured_token", return_value="test-credential"),
+            patch.object(bridge, "discover", return_value=frames),
+            patch.object(bridge, "choose_frame") as picker,
+            patch.object(bridge, "fetch_frames", side_effect=bridge.SystemFault("Selected reference")) as fetch,
+        ):
+            args = self.arguments(directory, "1-554")
+            args.interactive_frames = True
+            with self.assertRaisesRegex(bridge.SystemFault, "Selected reference"):
+                bridge.prepare(args)
+            picker.assert_not_called()
+            self.assertEqual(fetch.call_args.args[1], ["1:554"])
+
     def test_missing_token_is_actionable(self):
         with (
             tempfile.TemporaryDirectory() as directory,

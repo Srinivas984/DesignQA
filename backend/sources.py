@@ -137,7 +137,8 @@ DOM = r"""() => {
       selector: selector(el), tag: el.localName, identity: [el.id, el.getAttribute('class')].filter(Boolean).join(' ').slice(0, 200),
       role: el.getAttribute('role') || '', label: (el.getAttribute('aria-label') || el.getAttribute('alt') ||
         (el.getAttribute('aria-labelledby') || '').split(/\s+/).map(id => document.getElementById(id)?.textContent || '').join(' ')).slice(0, 200),
-      text: (el.innerText || el.textContent || '').trim().slice(0, 200)
+      text: (el.innerText || el.textContent || '').trim().slice(0, 200),
+      direct_text: Array.from(el.childNodes).filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.textContent).join('').trim().slice(0,200)
     }));
 }"""
 
@@ -190,6 +191,9 @@ def suggestions(frame, dom, width, saved):
             if text and text == normal(element["text"]):
                 score += 6
                 signals.append("Exact text")
+                if text == normal(element.get("direct_text", "")):
+                    score += 3
+                    signals.append("Direct text")
                 if element["tag"] in {"h1", "h2", "h3", "h4", "a", "button", "p", "label"}:
                     score += 1
             if name and name == normal(element["label"]):
