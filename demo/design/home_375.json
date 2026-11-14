@@ -1,0 +1,98 @@
+{
+  "Nav logo": {
+    "fontFamily": "Georgia, serif",
+    "fontSize": 24.0,
+    "fontWeight": 700,
+    "color": "#fffaf3",
+    "bg": null,
+    "radius": 0.0,
+    "x": 24,
+    "y": 22.5,
+    "w": 72.9,
+    "h": 27
+  },
+  "Hero heading": {
+    "fontFamily": "Georgia, serif",
+    "fontSize": 34.0,
+    "fontWeight": 700,
+    "color": "#2b2118",
+    "bg": null,
+    "radius": 0.0,
+    "x": 24,
+    "y": 128,
+    "w": 327,
+    "h": 84
+  },
+  "Hero subtitle": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": 20.0,
+    "fontWeight": 400,
+    "color": "#5a4636",
+    "bg": null,
+    "radius": 0.0,
+    "x": 24,
+    "y": 232,
+    "w": 327,
+    "h": 90
+  },
+  "Promo badge": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": 14.0,
+    "fontWeight": 700,
+    "color": "#ffffff",
+    "bg": "#c8553d",
+    "radius": 999.0,
+    "x": 214.0,
+    "y": 88,
+    "w": 137.0,
+    "h": 32
+  },
+  "CTA button": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": 18.0,
+    "fontWeight": 700,
+    "color": "#ffffff",
+    "bg": "#c8553d",
+    "radius": 8.0,
+    "x": 24,
+    "y": 354,
+    "w": 173.0,
+    "h": 53
+  },
+  "Feature card 1": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": 16.0,
+    "fontWeight": 400,
+    "color": "#2b2118",
+    "bg": "#ffffff",
+    "radius": 12.0,
+    "x": 24,
+    "y": 604,
+    "w": 327,
+    "h": 200
+  },
+  "Feature title": {
+    "fontFamily": "Georgia, serif",
+    "fontSize": 24.0,
+    "fontWeight": 700,
+    "color": "#2b2118",
+    "bg": null,
+    "radius": 0.0,
+    "x": 57,
+    "y": 637,
+    "w": 261,
+    "h": 27
+  },
+  "Footer text": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": 14.0,
+    "fontWeight": 400,
+    "color": "#e8d9c4",
+    "bg": "#2b2118",
+    "radius": 0.0,
+    "x": 0,
+    "y": 1284,
+    "w": 375,
+    "h": 96
+  }
+}

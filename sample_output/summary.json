@@ -1,0 +1,12 @@
+{
+  "run_id": "sample",
+  "output_dir": "/home/claude/DesignQA/Output/sample",
+  "report": "/home/claude/DesignQA/Output/sample/report.html",
+  "checks": 4,
+  "pass": 2,
+  "fail": 2,
+  "error": 0,
+  "high": 2,
+  "medium": 9,
+  "low": 16
+}

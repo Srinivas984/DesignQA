@@ -1,0 +1,1 @@
+{"name":"designqa-web","version":"0.1.0","private":true,"type":"module","scripts":{"dev":"vite","build":"tsc --noEmit && vite build","preview":"vite preview"},"dependencies":{"react":"^19","react-dom":"^19","lucide-react":"^0.468.0"},"devDependencies":{"vite":"^8","typescript":"^5.9","@types/react":"^19","@types/react-dom":"^19","@tailwindcss/vite":"^4","tailwindcss":"^4"}}

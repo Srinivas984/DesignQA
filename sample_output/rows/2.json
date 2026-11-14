@@ -1,0 +1,19 @@
+{
+  "row": 2,
+  "page": "Home_Baseline",
+  "breakpoint": 1440,
+  "url": "demo/site/good/index.html",
+  "status": "PASS",
+  "ssim": 1.0,
+  "threshold": 0.97,
+  "regions": [],
+  "height_design": 936,
+  "height_live": 936,
+  "findings": [],
+  "images": {
+    "design": "images/Home_Baseline_1440_design.png",
+    "live": "images/Home_Baseline_1440_live.png",
+    "diff": "images/Home_Baseline_1440_diff.png"
+  },
+  "seconds": 1.7
+}

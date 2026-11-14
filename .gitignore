@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+Output/*
+!Output/.gitkeep
+.env
+.env.*
+!.env.example
+*.nupkg
+uipath/DesignQAAutomation/.*/

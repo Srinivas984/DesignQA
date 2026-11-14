@@ -1,0 +1,286 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="Main_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.Diagnostics.Process</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="DesignQA Automation" sap2010:WorkflowViewState.IdRef="Sequence_9">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="mode" />
+      <Variable x:TypeArguments="x:String" Name="viewport" />
+      <Variable x:TypeArguments="x:String" Name="widths" />
+      <Variable x:TypeArguments="x:String" Name="figma" />
+      <Variable x:TypeArguments="x:String" Name="live" />
+      <Variable x:TypeArguments="x:String" Name="desktopFrame" />
+      <Variable x:TypeArguments="x:String" Name="mobileFrame" />
+      <Variable x:TypeArguments="x:String" Name="root" />
+      <Variable x:TypeArguments="x:String" Name="python" />
+      <Variable x:TypeArguments="x:String" Name="outRoot" />
+      <Variable x:TypeArguments="x:String" Name="runId" />
+      <Variable x:TypeArguments="x:String" Name="workbook" />
+      <Variable x:TypeArguments="x:String" Name="preparation" />
+      <Variable x:TypeArguments="x:String" Name="rows" />
+      <Variable x:TypeArguments="x:String" Name="classification" />
+      <Variable x:TypeArguments="x:String" Name="entry" />
+      <Variable x:TypeArguments="x:String" Name="reportPath" />
+      <Variable x:TypeArguments="x:String" Name="excelPath" />
+      <Variable x:TypeArguments="x:String" Name="summary" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Sequence DisplayName="1. Collect analysis input" sap2010:WorkflowViewState.IdRef="Sequence_2">
+      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Choose Demo or Figma" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Enter demo to compare the Brewly fixture, or figma to compare a live site." Title="DesignQA" TopMost="False">
+        <ui:InputDialog.Result>
+          <OutArgument x:TypeArguments="x:String">[mode]</OutArgument>
+        </ui:InputDialog.Result>
+      </ui:InputDialog>
+      <Assign DisplayName="Normalize analysis mode" sap2010:WorkflowViewState.IdRef="Assign_1">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[mode]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[If(mode, "").Trim().ToLowerInvariant()]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <If Condition="[mode &lt;&gt; &quot;demo&quot; AndAlso mode &lt;&gt; &quot;figma&quot;]" DisplayName="Validate analysis mode" sap2010:WorkflowViewState.IdRef="If_1">
+        <If.Then>
+          <Throw Exception="[New InvalidOperationException(&quot;Enter demo or figma and run again.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
+        </If.Then>
+      </If>
+      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Choose the breakpoints" sap2010:WorkflowViewState.IdRef="InputDialog_2" IsPassword="False" Label="Enter both, desktop (1440 px), or mobile (375 px). A blank answer uses both." Title="DesignQA" TopMost="False">
+        <ui:InputDialog.Result>
+          <OutArgument x:TypeArguments="x:String">[viewport]</OutArgument>
+        </ui:InputDialog.Result>
+      </ui:InputDialog>
+      <Assign DisplayName="Normalize viewport selection" sap2010:WorkflowViewState.IdRef="Assign_2">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[viewport]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[If(viewport, "").Trim().ToLowerInvariant()]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <If Condition="[viewport &lt;&gt; &quot;&quot; AndAlso viewport &lt;&gt; &quot;both&quot; AndAlso viewport &lt;&gt; &quot;desktop&quot; AndAlso viewport &lt;&gt; &quot;mobile&quot;]" DisplayName="Validate viewport selection" sap2010:WorkflowViewState.IdRef="If_2">
+        <If.Then>
+          <Throw Exception="[New InvalidOperationException(&quot;Enter both, desktop, or mobile.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_2" />
+        </If.Then>
+      </If>
+      <Assign DisplayName="Set viewport widths" sap2010:WorkflowViewState.IdRef="Assign_3">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[widths]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[If(viewport = "desktop", "1440", If(viewport = "mobile", "375", "1440,375"))]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <If Condition="[mode = &quot;figma&quot;]" DisplayName="Request Figma inputs for a live comparison" sap2010:WorkflowViewState.IdRef="If_5">
+        <If.Then>
+          <Sequence DisplayName="Enter Figma and live site details" sap2010:WorkflowViewState.IdRef="Sequence_1">
+            <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the Figma design link" sap2010:WorkflowViewState.IdRef="InputDialog_3" IsPassword="False" Label="Paste the Figma design URL. A link to a specific frame can include node-id." Title="DesignQA" TopMost="False">
+              <ui:InputDialog.Result>
+                <OutArgument x:TypeArguments="x:String">[figma]</OutArgument>
+              </ui:InputDialog.Result>
+            </ui:InputDialog>
+            <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the live website link" sap2010:WorkflowViewState.IdRef="InputDialog_4" IsPassword="False" Label="Paste the corresponding public HTTP(S) website URL." Title="DesignQA" TopMost="False">
+              <ui:InputDialog.Result>
+                <OutArgument x:TypeArguments="x:String">[live]</OutArgument>
+              </ui:InputDialog.Result>
+            </ui:InputDialog>
+            <If Condition="[viewport &lt;&gt; &quot;mobile&quot;]" DisplayName="Request optional desktop frame ID" sap2010:WorkflowViewState.IdRef="If_3">
+              <If.Then>
+                <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter desktop frame ID" sap2010:WorkflowViewState.IdRef="InputDialog_5" IsPassword="False" Label="Enter the 1440 px Figma frame ID if known. Leave blank to use the linked or sole matching frame." Title="DesignQA" TopMost="False">
+                  <ui:InputDialog.Result>
+                    <OutArgument x:TypeArguments="x:String">[desktopFrame]</OutArgument>
+                  </ui:InputDialog.Result>
+                </ui:InputDialog>
+              </If.Then>
+            </If>
+            <If Condition="[viewport &lt;&gt; &quot;desktop&quot;]" DisplayName="Request optional mobile frame ID" sap2010:WorkflowViewState.IdRef="If_4">
+              <If.Then>
+                <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter mobile frame ID" sap2010:WorkflowViewState.IdRef="InputDialog_6" IsPassword="False" Label="Enter the 375 px Figma frame ID if known. Leave blank to use the linked or sole matching frame." Title="DesignQA" TopMost="False">
+                  <ui:InputDialog.Result>
+                    <OutArgument x:TypeArguments="x:String">[mobileFrame]</OutArgument>
+                  </ui:InputDialog.Result>
+                </ui:InputDialog>
+              </If.Then>
+            </If>
+          </Sequence>
+        </If.Then>
+      </If>
+    </Sequence>
+    <Sequence DisplayName="2. Initialize and prepare Excel" sap2010:WorkflowViewState.IdRef="Sequence_3">
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="root = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PROJECT_PATH&quot;)&#xA;If String.IsNullOrWhiteSpace(root) Then&#xA;    Dim dir As New System.IO.DirectoryInfo(Environment.CurrentDirectory)&#xA;    While dir IsNot Nothing AndAlso Not System.IO.File.Exists(System.IO.Path.Combine(dir.FullName, &quot;uipath&quot;, &quot;studio_bridge.py&quot;))&#xA;        dir = dir.Parent&#xA;    End While&#xA;    If dir IsNot Nothing Then root = dir.FullName&#xA;End If&#xA;If String.IsNullOrWhiteSpace(root) OrElse Not System.IO.File.Exists(System.IO.Path.Combine(root, &quot;uipath&quot;, &quot;studio_bridge.py&quot;)) Then Throw New InvalidOperationException(&quot;Set DESIGNQA_PROJECT_PATH to the DesignQA folder.&quot;)&#xA;python = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PYTHON&quot;)&#xA;If String.IsNullOrWhiteSpace(python) Then&#xA;    python = System.IO.Path.Combine(root, &quot;.venv&quot;, &quot;Scripts&quot;, &quot;python.exe&quot;)&#xA;End If&#xA;If Not System.IO.File.Exists(python) Then Throw New InvalidOperationException(&quot;Run the Python setup or set DESIGNQA_PYTHON.&quot;)&#xA;outRoot = System.IO.Path.Combine(root, &quot;Output&quot;, &quot;uipath&quot;)" DisplayName="Locate the DesignQA engine and Python" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+        <ui:InvokeCode.Arguments>
+          <OutArgument x:TypeArguments="x:String" x:Key="root">[root]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="python">[python]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</OutArgument>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
+      <Assign DisplayName="Create a unique run ID" sap2010:WorkflowViewState.IdRef="Assign_4">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[runId]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">["studio_" &amp; Guid.NewGuid().ToString("N")]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Set the per-run workbook path" sap2010:WorkflowViewState.IdRef="Assign_5">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[workbook]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[System.IO.Path.Combine(outRoot, runId, "Input", "pages.xlsx")]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <WriteLine DisplayName="Log the workbook location" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Workbook: &quot; &amp; workbook]" />
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim response = callPython(New String() {&quot;uipath/studio_bridge.py&quot;, &quot;--mode&quot;, mode, &quot;--widths&quot;, widths, &quot;--workbook&quot;, workbook,&#xA;                                       &quot;--figma&quot;, figma, &quot;--live&quot;, live, &quot;--desktop-frame&quot;, desktopFrame, &quot;--mobile-frame&quot;, mobileFrame})&#xA;If response.Item1 &lt;&gt; 0 Then&#xA;    Dim detail = &quot;Could not prepare the Excel workbook.&quot;&#xA;    Try&#xA;        Using doc = System.Text.Json.JsonDocument.Parse(response.Item2)&#xA;            detail = doc.RootElement.GetProperty(&quot;error&quot;).GetString()&#xA;        End Using&#xA;    Catch ex As System.Text.Json.JsonException&#xA;    End Try&#xA;    Throw New InvalidOperationException(detail)&#xA;End If&#xA;preparation = response.Item2.Trim()" DisplayName="Build Pages, Mapping and Settings sheets" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+        <ui:InvokeCode.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="workbook">[workbook]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="runId">[runId]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="mode">[mode]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="widths">[widths]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="figma">[figma]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="live">[live]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="desktopFrame">[desktopFrame]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="mobileFrame">[mobileFrame]</InArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="preparation">[preparation]</OutArgument>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
+      <WriteLine DisplayName="Log configuration and mapping coverage" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[preparation]" />
+    </Sequence>
+    <Sequence DisplayName="3. Get transaction data from Excel" sap2010:WorkflowViewState.IdRef="Sequence_4">
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;scripts/run_qa.py&quot;, &quot;--config&quot;, workbook, &quot;--list&quot;})&#xA;If result.Item1 &lt;&gt; 0 Then Throw New InvalidOperationException(&quot;Could not read the Excel workbook.&quot;)&#xA;Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;    Dim numbers As New List(Of String)&#xA;    For Each entry In doc.RootElement.EnumerateArray()&#xA;        numbers.Add(entry.GetProperty(&quot;row&quot;).GetInt32().ToString())&#xA;    Next&#xA;    If numbers.Count = 0 Then Throw New InvalidOperationException(&quot;No enabled checks in the workbook.&quot;)&#xA;    rows = String.Join(&quot;,&quot;, numbers)&#xA;End Using" DisplayName="Read enabled rows from the workbook" sap2010:WorkflowViewState.IdRef="InvokeCode_3">
+        <ui:InvokeCode.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="workbook">[workbook]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="runId">[runId]</InArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="rows">[rows]</OutArgument>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
+      <WriteLine DisplayName="Log enabled workbook row numbers" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Enabled Excel rows: &quot; &amp; rows]" />
+    </Sequence>
+    <Sequence DisplayName="4. Process each page and breakpoint" sap2010:WorkflowViewState.IdRef="Sequence_7">
+      <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For each enabled Excel row" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[rows.Split(&quot;,&quot;c)]">
+        <ui:ForEach.Body>
+          <ActivityAction x:TypeArguments="x:String">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="x:String" Name="currentRow" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Run and classify the transaction" sap2010:WorkflowViewState.IdRef="Sequence_6">
+              <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;uipath/studio_bridge.py&quot;, &quot;--workbook&quot;, workbook, &quot;--row&quot;, currentRow, &quot;--out&quot;, outRoot, &quot;--run-id&quot;, runId})&#xA;Dim status = &quot;ERROR&quot;&#xA;classification = &quot;SystemFault&quot;&#xA;Try&#xA;    Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;        Dim field As System.Text.Json.JsonElement&#xA;        If doc.RootElement.TryGetProperty(&quot;status&quot;, field) Then status = field.GetString()&#xA;        If result.Item1 = 0 OrElse result.Item1 = 1 Then&#xA;            classification = &quot;Completed&quot;&#xA;        ElseIf result.Item1 = 2 AndAlso doc.RootElement.TryGetProperty(&quot;error_type&quot;, field) AndAlso field.ValueKind = System.Text.Json.JsonValueKind.String Then&#xA;            classification = field.GetString()&#xA;        End If&#xA;    End Using&#xA;Catch ex As System.Text.Json.JsonException&#xA;End Try&#xA;entry = &quot;Excel row &quot; &amp; currentRow &amp; &quot; | exit &quot; &amp; result.Item1.ToString() &amp; &quot; | &quot; &amp; classification &amp; &quot; | &quot; &amp; status&#xA;System.IO.File.AppendAllText(System.IO.Path.Combine(outRoot, runId, &quot;transactions.log&quot;), entry &amp; Environment.NewLine)" DisplayName="Compare this Excel row" sap2010:WorkflowViewState.IdRef="InvokeCode_4">
+                <ui:InvokeCode.Arguments>
+                  <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="workbook">[workbook]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="runId">[runId]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="currentRow">[currentRow]</InArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="classification">[classification]</OutArgument>
+                  <OutArgument x:TypeArguments="x:String" x:Key="entry">[entry]</OutArgument>
+                </ui:InvokeCode.Arguments>
+              </ui:InvokeCode>
+              <WriteLine DisplayName="Log comparison status" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="[entry]" />
+              <If Condition="[classification = &quot;SystemFault&quot;]" DisplayName="Retry only a system fault" sap2010:WorkflowViewState.IdRef="If_6">
+                <If.Then>
+                  <Sequence DisplayName="Retry the same workbook row once" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                    <WriteLine DisplayName="Log the technical retry" sap2010:WorkflowViewState.IdRef="WriteLine_5" Text="[&quot;Retrying Excel row &quot; &amp; currentRow]" />
+                    <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;uipath/studio_bridge.py&quot;, &quot;--workbook&quot;, workbook, &quot;--row&quot;, currentRow, &quot;--out&quot;, outRoot, &quot;--run-id&quot;, runId})&#xA;Dim status = &quot;ERROR&quot;&#xA;classification = &quot;SystemFault&quot;&#xA;Try&#xA;    Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;        Dim field As System.Text.Json.JsonElement&#xA;        If doc.RootElement.TryGetProperty(&quot;status&quot;, field) Then status = field.GetString()&#xA;        If result.Item1 = 0 OrElse result.Item1 = 1 Then&#xA;            classification = &quot;Completed&quot;&#xA;        ElseIf result.Item1 = 2 AndAlso doc.RootElement.TryGetProperty(&quot;error_type&quot;, field) AndAlso field.ValueKind = System.Text.Json.JsonValueKind.String Then&#xA;            classification = field.GetString()&#xA;        End If&#xA;    End Using&#xA;Catch ex As System.Text.Json.JsonException&#xA;End Try&#xA;entry = &quot;Excel row &quot; &amp; currentRow &amp; &quot; | exit &quot; &amp; result.Item1.ToString() &amp; &quot; | &quot; &amp; classification &amp; &quot; | &quot; &amp; status&#xA;System.IO.File.AppendAllText(System.IO.Path.Combine(outRoot, runId, &quot;transactions.log&quot;), entry &amp; Environment.NewLine)" DisplayName="Retry the comparison" sap2010:WorkflowViewState.IdRef="InvokeCode_5">
+                      <ui:InvokeCode.Arguments>
+                        <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
+                        <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
+                        <InArgument x:TypeArguments="x:String" x:Key="workbook">[workbook]</InArgument>
+                        <InArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</InArgument>
+                        <InArgument x:TypeArguments="x:String" x:Key="runId">[runId]</InArgument>
+                        <InArgument x:TypeArguments="x:String" x:Key="currentRow">[currentRow]</InArgument>
+                        <OutArgument x:TypeArguments="x:String" x:Key="classification">[classification]</OutArgument>
+                        <OutArgument x:TypeArguments="x:String" x:Key="entry">[entry]</OutArgument>
+                      </ui:InvokeCode.Arguments>
+                    </ui:InvokeCode>
+                    <WriteLine DisplayName="Log final transaction status" sap2010:WorkflowViewState.IdRef="WriteLine_6" Text="[entry]" />
+                  </Sequence>
+                </If.Then>
+              </If>
+            </Sequence>
+          </ActivityAction>
+        </ui:ForEach.Body>
+      </ui:ForEach>
+    </Sequence>
+    <Sequence DisplayName="5. Generate and display reports" sap2010:WorkflowViewState.IdRef="Sequence_8">
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;scripts/run_qa.py&quot;, &quot;--config&quot;, workbook, &quot;--report&quot;, &quot;--out&quot;, outRoot, &quot;--run-id&quot;, runId})&#xA;If result.Item1 &lt;&gt; 0 Then Throw New InvalidOperationException(&quot;Could not build the reports. Check transactions.log.&quot;)&#xA;Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;    reportPath = doc.RootElement.GetProperty(&quot;report&quot;).GetString()&#xA;    summary = String.Format(&quot;{0} checks | {1} pass | {2} fail | {3} errors&quot;,&#xA;        doc.RootElement.GetProperty(&quot;checks&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;pass&quot;).GetInt32(),&#xA;        doc.RootElement.GetProperty(&quot;fail&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;error&quot;).GetInt32())&#xA;End Using&#xA;excelPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(reportPath), &quot;findings.xlsx&quot;)&#xA;If Not System.IO.File.Exists(reportPath) OrElse Not System.IO.File.Exists(excelPath) Then Throw New System.IO.IOException(&quot;A report artifact is missing.&quot;)&#10;Dim excelLaunch As New System.Diagnostics.ProcessStartInfo(excelPath)&#10;excelLaunch.UseShellExecute = True&#10;System.Diagnostics.Process.Start(excelLaunch)" DisplayName="Generate and verify HTML and Excel" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
+        <ui:InvokeCode.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="workbook">[workbook]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="outRoot">[outRoot]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="runId">[runId]</InArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="reportPath">[reportPath]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="excelPath">[excelPath]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="summary">[summary]</OutArgument>
+        </ui:InvokeCode.Arguments>
+      </ui:InvokeCode>
+      <WriteLine DisplayName="Log the final counts" sap2010:WorkflowViewState.IdRef="WriteLine_7" Text="[summary]" />
+      <WriteLine DisplayName="Log the HTML report path" sap2010:WorkflowViewState.IdRef="WriteLine_8" Text="[reportPath]" />
+      <WriteLine DisplayName="Log the Excel report path" sap2010:WorkflowViewState.IdRef="WriteLine_9" Text="[excelPath]" />
+    </Sequence>
+  </Sequence>
+</Activity>
+
+
+

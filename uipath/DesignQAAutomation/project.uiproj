@@ -1,0 +1,6 @@
+{
+  "Name": "DesignQAAutomation",
+  "ProjectType": "Process",
+  "Description": "Run configured DesignQA comparisons and generate reports",
+  "MainFile": "Main.xaml"
+}

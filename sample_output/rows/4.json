@@ -1,0 +1,257 @@
+{
+  "row": 4,
+  "page": "Home_Buggy",
+  "breakpoint": 1440,
+  "url": "demo/site/buggy/index.html",
+  "status": "FAIL",
+  "ssim": 0.9599,
+  "threshold": 0.97,
+  "regions": [
+    [
+      54,
+      273,
+      576,
+      90
+    ],
+    [
+      56,
+      144,
+      610,
+      62
+    ],
+    [
+      1229,
+      94,
+      157,
+      52
+    ],
+    [
+      54,
+      200,
+      123,
+      55
+    ],
+    [
+      1357,
+      757,
+      29,
+      29
+    ],
+    [
+      945,
+      757,
+      29,
+      29
+    ],
+    [
+      912,
+      757,
+      29,
+      29
+    ],
+    [
+      499,
+      757,
+      29,
+      29
+    ],
+    [
+      466,
+      757,
+      29,
+      29
+    ],
+    [
+      54,
+      757,
+      29,
+      29
+    ],
+    [
+      1357,
+      546,
+      29,
+      29
+    ],
+    [
+      945,
+      546,
+      29,
+      29
+    ],
+    [
+      912,
+      546,
+      29,
+      29
+    ],
+    [
+      499,
+      546,
+      29,
+      29
+    ],
+    [
+      466,
+      546,
+      29,
+      29
+    ],
+    [
+      54,
+      546,
+      29,
+      29
+    ]
+  ],
+  "height_design": 936,
+  "height_live": 936,
+  "findings": [
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Hero heading",
+      "category": "Style",
+      "property": "Font size",
+      "expected": "48px",
+      "actual": "44px",
+      "severity": "Medium"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Hero subtitle",
+      "category": "Layout",
+      "property": "Y position",
+      "expected": "276px",
+      "actual": "296px",
+      "severity": "Medium"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Promo badge",
+      "category": "Missing",
+      "property": "Element",
+      "expected": "present",
+      "actual": "NOT FOUND on live page",
+      "severity": "High"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "CTA button",
+      "category": "Style",
+      "property": "Background colour",
+      "expected": "#c8553d",
+      "actual": "#d98b2b",
+      "severity": "Medium"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Feature card 1",
+      "category": "Style",
+      "property": "Corner radius",
+      "expected": "12px",
+      "actual": "4px",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Whole page",
+      "category": "Visual",
+      "property": "Pixel similarity (SSIM)",
+      "expected": ">= 0.97",
+      "actual": "0.9599",
+      "severity": "Medium"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=54 y=273",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "576x90px differs",
+      "severity": "Medium"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=56 y=144",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "610x62px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=1229 y=94",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "157x52px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=54 y=200",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "123x55px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=1357 y=757",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "29x29px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=945 y=757",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "29x29px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=912 y=757",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "29x29px differs",
+      "severity": "Low"
+    },
+    {
+      "page": "Home_Buggy",
+      "breakpoint": 1440,
+      "label": "Region x=499 y=757",
+      "category": "Visual",
+      "property": "Changed area",
+      "expected": "matches design",
+      "actual": "29x29px differs",
+      "severity": "Low"
+    }
+  ],
+  "images": {
+    "design": "images/Home_Buggy_1440_design.png",
+    "live": "images/Home_Buggy_1440_live.png",
+    "diff": "images/Home_Buggy_1440_diff.png"
+  },
+  "seconds": 1.6
+}
