@@ -2,13 +2,19 @@
 
 Open `project.json`, then open `Main.xaml` and press **Run**. The Studio workflow is the primary interface. FastAPI and the React website are optional.
 
+Main now asks for exactly two inputs: the Figma reference-frame link and the corresponding deployed website URL. Select the intended frame in Figma and use **Copy link to selection**. Its width is used automatically. A page link with multiple possible frames is rejected with guidance to copy the frame link. The website URL comes from your implementation's hosting dashboard or developer. A Figma prototype link cannot supply the website DOM used for CSS validation.
+
+Configure `FIGMA_TOKEN` once as a Windows user environment variable. The bridge reads that value even when Studio was started earlier. The Figma plugin connection in this chat provides access for chat tools independently of the local Robot.
+
 ## Demo
 
-Enter `demo` in the first Input Dialog and `both` in the viewport dialog. Studio prepares the Brewly baseline and seeded variant at 1440 px and 375 px. The preparation step recaptures the reference on the current machine to minimize browser and font drift. No Figma token is required.
+For the connected Flipkart Figma export verification, open `FigmaFrameComparison.xaml` and select **Debug File (F6)**. It asks for the Figma file URL and finds its matching exported frames and node measurements under `Output`, runs the Python comparison in JSON-only mode, then uses Excel automation inside UiPath to create and save a new workbook. It populates Findings and Summary and leaves Excel visible. Each run has a unique folder under `Output/uipath/figma_<id>`. The source export must already be present. This entry point does not refresh Figma through the plugin.
+
+The optional website's Demo Analysis still runs the Brewly baseline and seeded variant at 1440 px and 375 px. Main is dedicated to the two-link workflow.
 
 ## Figma and a live website
 
-Set `FIGMA_TOKEN` in the environment inherited by Studio and its Robot before starting a run. Use a token with file content read access. Keep the token out of the dialogs and workbook. Enter `figma`, select the viewports, and paste the design and live site URLs. A viewport requires a Figma frame of the matching width. Enter its node ID when there are several candidates. A frame specified in the URL or the only matching frame can be selected automatically.
+Set `FIGMA_TOKEN` in the environment inherited by Studio and its Robot before starting a run. Use a token with file content read access. Keep the token out of the dialogs and workbook. Paste the selected reference-frame URL and the implemented website URL into the two dialogs. The frame width is selected automatically. If the page has several frames, copy the intended frame link before running.
 
 The bridge retrieves the frame image and layer data and inspects the live DOM. It keeps high-confidence automatic CSS mappings. Review the mapping count in Studio Output and the Mapping sheet. Skipped layers are unverified and visual comparison still runs when there are no approved suggestions. The optional web interface provides interactive mapping corrections.
 
@@ -16,7 +22,7 @@ The bridge retrieves the frame image and layer data and inspects the live DOM. I
 
 | Sequence | Studio activities and responsibilities |
 | --- | --- |
-| Collect analysis input | **Input Dialog** collects mode and viewports. **Assign** normalizes the values. **If** validates choices and branches into the Figma, live URL and frame prompts. |
+| Collect analysis input | Two **Input Dialog** activities collect the Figma frame link and website link. **Assign** requests automatic frame-width selection. |
 | Initialize and prepare Excel | **Invoke Code** locates Python and calls the input bridge. **Assign** creates a unique run ID and a per-run workbook path. **Write Line** logs workbook details and mapping coverage. |
 | Get transaction data from Excel | **Invoke Code** runs the Excel reader through `--list` and returns enabled Excel row numbers. **Write Line** displays which rows will run. |
 | Process each page and breakpoint | **For Each** runs one Excel row at a time. **Invoke Code** captures the engine's JSON status and exit code. **If** retries a system fault once. **Write Line** logs the result of each attempt. |

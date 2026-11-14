@@ -11,7 +11,24 @@ screenshots, image diff and Figma API calls.
 
 ## Primary workflow in UiPath Studio
 
-Open [the UiPath project](uipath/DesignQAAutomation/project.json), open `Main.xaml`, and select **Run**. Enter `demo` and `both` for a complete desktop and mobile demonstration. Use `figma` to enter a design URL and a live website in Studio.
+Open [the UiPath project](uipath/DesignQAAutomation/project.json) and select the workflow below. Double-click its XAML file in Studio Explorer and press **F6 (Debug File)** to run that selected file.
+
+| Workflow | What it compares | Inputs |
+| --- | --- | --- |
+| `Main.xaml` | A selected Figma reference frame with the implemented website | Figma frame URL and deployed website URL. Requires one-time token setup. |
+| `FigmaFrameComparison.xaml` | Two saved exports from the same Figma file | Figma file URL. Requires a matching local export bundle. |
+
+For the current Flipkart frame demonstration, open `FigmaFrameComparison.xaml`, press **F6**, and paste:
+
+```text
+https://www.figma.com/design/jBFz1c5xbu8mYP7FCSdQwE/Untitled?node-id=0-1
+```
+
+The workflow looks for a matching `source-nodes.json` and both frame PNGs in a direct child of `Output/`. The verified local bundle is `Output/flipkart-figma-verification`. Runtime exports are excluded from Git to keep user design data out of the source repository. A fresh checkout needs an authorized export bundle before this demonstration can run. Re-export after editing the Figma frames.
+
+For `Main.xaml`, select the intended reference frame in Figma and choose **Copy link to selection**. Paste that frame link in the first dialog. Paste the URL of the corresponding implemented website in the second dialog. Obtain that address from the developer or the deployment dashboard, such as Vercel, Netlify or GitHub Pages. The chosen frame's width is detected automatically. A Figma page containing several frames needs a frame-specific link.
+
+Set `FIGMA_TOKEN` once as a Windows user environment variable using a Figma personal access token with file content read access. Keep it out of the links, worksheets and Git. The bridge can read the Windows user variable even if Studio was started earlier. Connecting Figma in this chat gives the chat tools access independently of the local UiPath Robot.
 
 When the run completes, Studio opens the findings workbook in Microsoft Excel. The [Studio walkthrough](uipath/DesignQAAutomation/README.md) covers Windows setup, each activity group, Figma credentials and frame selection, and the generated Excel and HTML files.
 

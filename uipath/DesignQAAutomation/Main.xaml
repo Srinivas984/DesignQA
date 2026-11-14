@@ -81,84 +81,24 @@
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
     <Sequence DisplayName="1. Collect analysis input" sap2010:WorkflowViewState.IdRef="Sequence_2">
-      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Choose Demo or Figma" sap2010:WorkflowViewState.IdRef="InputDialog_1" IsPassword="False" Label="Enter demo to compare the Brewly fixture, or figma to compare a live site." Title="DesignQA" TopMost="False">
+      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the Figma design link" sap2010:WorkflowViewState.IdRef="InputDialog_3" IsPassword="False" Label="Paste the Figma design URL. A link to a specific frame can include node-id." Title="DesignQA" TopMost="False">
         <ui:InputDialog.Result>
-          <OutArgument x:TypeArguments="x:String">[mode]</OutArgument>
+          <OutArgument x:TypeArguments="x:String">[figma]</OutArgument>
         </ui:InputDialog.Result>
       </ui:InputDialog>
-      <Assign DisplayName="Normalize analysis mode" sap2010:WorkflowViewState.IdRef="Assign_1">
-        <Assign.To>
-          <OutArgument x:TypeArguments="x:String">[mode]</OutArgument>
-        </Assign.To>
-        <Assign.Value>
-          <InArgument x:TypeArguments="x:String">[If(mode, "").Trim().ToLowerInvariant()]</InArgument>
-        </Assign.Value>
-      </Assign>
-      <If Condition="[mode &lt;&gt; &quot;demo&quot; AndAlso mode &lt;&gt; &quot;figma&quot;]" DisplayName="Validate analysis mode" sap2010:WorkflowViewState.IdRef="If_1">
-        <If.Then>
-          <Throw Exception="[New InvalidOperationException(&quot;Enter demo or figma and run again.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
-        </If.Then>
-      </If>
-      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Choose the breakpoints" sap2010:WorkflowViewState.IdRef="InputDialog_2" IsPassword="False" Label="Enter both, desktop (1440 px), or mobile (375 px). A blank answer uses both." Title="DesignQA" TopMost="False">
+      <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the live website link" sap2010:WorkflowViewState.IdRef="InputDialog_4" IsPassword="False" Label="Paste the deployed website address corresponding to the design, such as https://your-project.vercel.app. Get it from your developer or hosting dashboard." Title="DesignQA" TopMost="False">
         <ui:InputDialog.Result>
-          <OutArgument x:TypeArguments="x:String">[viewport]</OutArgument>
+          <OutArgument x:TypeArguments="x:String">[live]</OutArgument>
         </ui:InputDialog.Result>
       </ui:InputDialog>
-      <Assign DisplayName="Normalize viewport selection" sap2010:WorkflowViewState.IdRef="Assign_2">
-        <Assign.To>
-          <OutArgument x:TypeArguments="x:String">[viewport]</OutArgument>
-        </Assign.To>
-        <Assign.Value>
-          <InArgument x:TypeArguments="x:String">[If(viewport, "").Trim().ToLowerInvariant()]</InArgument>
-        </Assign.Value>
-      </Assign>
-      <If Condition="[viewport &lt;&gt; &quot;&quot; AndAlso viewport &lt;&gt; &quot;both&quot; AndAlso viewport &lt;&gt; &quot;desktop&quot; AndAlso viewport &lt;&gt; &quot;mobile&quot;]" DisplayName="Validate viewport selection" sap2010:WorkflowViewState.IdRef="If_2">
-        <If.Then>
-          <Throw Exception="[New InvalidOperationException(&quot;Enter both, desktop, or mobile.&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_2" />
-        </If.Then>
-      </If>
-      <Assign DisplayName="Set viewport widths" sap2010:WorkflowViewState.IdRef="Assign_3">
+      <Assign DisplayName="Use the linked frame width automatically" sap2010:WorkflowViewState.IdRef="Assign_3">
         <Assign.To>
           <OutArgument x:TypeArguments="x:String">[widths]</OutArgument>
         </Assign.To>
         <Assign.Value>
-          <InArgument x:TypeArguments="x:String">[If(viewport = "desktop", "1440", If(viewport = "mobile", "375", "1440,375"))]</InArgument>
+          <InArgument x:TypeArguments="x:String">["auto"]</InArgument>
         </Assign.Value>
       </Assign>
-      <If Condition="[mode = &quot;figma&quot;]" DisplayName="Request Figma inputs for a live comparison" sap2010:WorkflowViewState.IdRef="If_5">
-        <If.Then>
-          <Sequence DisplayName="Enter Figma and live site details" sap2010:WorkflowViewState.IdRef="Sequence_1">
-            <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the Figma design link" sap2010:WorkflowViewState.IdRef="InputDialog_3" IsPassword="False" Label="Paste the Figma design URL. A link to a specific frame can include node-id." Title="DesignQA" TopMost="False">
-              <ui:InputDialog.Result>
-                <OutArgument x:TypeArguments="x:String">[figma]</OutArgument>
-              </ui:InputDialog.Result>
-            </ui:InputDialog>
-            <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter the live website link" sap2010:WorkflowViewState.IdRef="InputDialog_4" IsPassword="False" Label="Paste the corresponding public HTTP(S) website URL." Title="DesignQA" TopMost="False">
-              <ui:InputDialog.Result>
-                <OutArgument x:TypeArguments="x:String">[live]</OutArgument>
-              </ui:InputDialog.Result>
-            </ui:InputDialog>
-            <If Condition="[viewport &lt;&gt; &quot;mobile&quot;]" DisplayName="Request optional desktop frame ID" sap2010:WorkflowViewState.IdRef="If_3">
-              <If.Then>
-                <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter desktop frame ID" sap2010:WorkflowViewState.IdRef="InputDialog_5" IsPassword="False" Label="Enter the 1440 px Figma frame ID if known. Leave blank to use the linked or sole matching frame." Title="DesignQA" TopMost="False">
-                  <ui:InputDialog.Result>
-                    <OutArgument x:TypeArguments="x:String">[desktopFrame]</OutArgument>
-                  </ui:InputDialog.Result>
-                </ui:InputDialog>
-              </If.Then>
-            </If>
-            <If Condition="[viewport &lt;&gt; &quot;desktop&quot;]" DisplayName="Request optional mobile frame ID" sap2010:WorkflowViewState.IdRef="If_4">
-              <If.Then>
-                <ui:InputDialog Options="{x:Null}" OptionsString="{x:Null}" DisplayName="Enter mobile frame ID" sap2010:WorkflowViewState.IdRef="InputDialog_6" IsPassword="False" Label="Enter the 375 px Figma frame ID if known. Leave blank to use the linked or sole matching frame." Title="DesignQA" TopMost="False">
-                  <ui:InputDialog.Result>
-                    <OutArgument x:TypeArguments="x:String">[mobileFrame]</OutArgument>
-                  </ui:InputDialog.Result>
-                </ui:InputDialog>
-              </If.Then>
-            </If>
-          </Sequence>
-        </If.Then>
-      </If>
     </Sequence>
     <Sequence DisplayName="2. Initialize and prepare Excel" sap2010:WorkflowViewState.IdRef="Sequence_3">
       <ui:InvokeCode ContinueOnError="{x:Null}" Code="root = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PROJECT_PATH&quot;)&#xA;If String.IsNullOrWhiteSpace(root) Then&#xA;    Dim dir As New System.IO.DirectoryInfo(Environment.CurrentDirectory)&#xA;    While dir IsNot Nothing AndAlso Not System.IO.File.Exists(System.IO.Path.Combine(dir.FullName, &quot;uipath&quot;, &quot;studio_bridge.py&quot;))&#xA;        dir = dir.Parent&#xA;    End While&#xA;    If dir IsNot Nothing Then root = dir.FullName&#xA;End If&#xA;If String.IsNullOrWhiteSpace(root) OrElse Not System.IO.File.Exists(System.IO.Path.Combine(root, &quot;uipath&quot;, &quot;studio_bridge.py&quot;)) Then Throw New InvalidOperationException(&quot;Set DESIGNQA_PROJECT_PATH to the DesignQA folder.&quot;)&#xA;python = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PYTHON&quot;)&#xA;If String.IsNullOrWhiteSpace(python) Then&#xA;    python = System.IO.Path.Combine(root, &quot;.venv&quot;, &quot;Scripts&quot;, &quot;python.exe&quot;)&#xA;End If&#xA;If Not System.IO.File.Exists(python) Then Throw New InvalidOperationException(&quot;Run the Python setup or set DESIGNQA_PYTHON.&quot;)&#xA;outRoot = System.IO.Path.Combine(root, &quot;Output&quot;, &quot;uipath&quot;)" DisplayName="Locate the DesignQA engine and Python" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
@@ -185,7 +125,7 @@
         </Assign.Value>
       </Assign>
       <WriteLine DisplayName="Log the workbook location" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Workbook: &quot; &amp; workbook]" />
-      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim response = callPython(New String() {&quot;uipath/studio_bridge.py&quot;, &quot;--mode&quot;, mode, &quot;--widths&quot;, widths, &quot;--workbook&quot;, workbook,&#xA;                                       &quot;--figma&quot;, figma, &quot;--live&quot;, live, &quot;--desktop-frame&quot;, desktopFrame, &quot;--mobile-frame&quot;, mobileFrame})&#xA;If response.Item1 &lt;&gt; 0 Then&#xA;    Dim detail = &quot;Could not prepare the Excel workbook.&quot;&#xA;    Try&#xA;        Using doc = System.Text.Json.JsonDocument.Parse(response.Item2)&#xA;            detail = doc.RootElement.GetProperty(&quot;error&quot;).GetString()&#xA;        End Using&#xA;    Catch ex As System.Text.Json.JsonException&#xA;    End Try&#xA;    Throw New InvalidOperationException(detail)&#xA;End If&#xA;preparation = response.Item2.Trim()" DisplayName="Build Pages, Mapping and Settings sheets" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim response = callPython(New String() {&quot;uipath/studio_bridge.py&quot;, &quot;--mode&quot;, &quot;figma&quot;, &quot;--widths&quot;, widths, &quot;--workbook&quot;, workbook,&#xA;                                       &quot;--figma&quot;, figma, &quot;--live&quot;, live, &quot;--desktop-frame&quot;, desktopFrame, &quot;--mobile-frame&quot;, mobileFrame})&#xA;If response.Item1 &lt;&gt; 0 Then&#xA;    Dim detail = &quot;Could not prepare the Excel workbook.&quot;&#xA;    Try&#xA;        Using doc = System.Text.Json.JsonDocument.Parse(response.Item2)&#xA;            detail = doc.RootElement.GetProperty(&quot;error&quot;).GetString()&#xA;        End Using&#xA;    Catch ex As System.Text.Json.JsonException&#xA;    End Try&#xA;    Throw New InvalidOperationException(detail)&#xA;End If&#xA;preparation = response.Item2.Trim()" DisplayName="Build Pages, Mapping and Settings sheets" sap2010:WorkflowViewState.IdRef="InvokeCode_2">
         <ui:InvokeCode.Arguments>
           <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
           <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
@@ -263,7 +203,7 @@
       </ui:ForEach>
     </Sequence>
     <Sequence DisplayName="5. Generate and display reports" sap2010:WorkflowViewState.IdRef="Sequence_8">
-      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;scripts/run_qa.py&quot;, &quot;--config&quot;, workbook, &quot;--report&quot;, &quot;--out&quot;, outRoot, &quot;--run-id&quot;, runId})&#xA;If result.Item1 &lt;&gt; 0 Then Throw New InvalidOperationException(&quot;Could not build the reports. Check transactions.log.&quot;)&#xA;Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;    reportPath = doc.RootElement.GetProperty(&quot;report&quot;).GetString()&#xA;    summary = String.Format(&quot;{0} checks | {1} pass | {2} fail | {3} errors&quot;,&#xA;        doc.RootElement.GetProperty(&quot;checks&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;pass&quot;).GetInt32(),&#xA;        doc.RootElement.GetProperty(&quot;fail&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;error&quot;).GetInt32())&#xA;End Using&#xA;excelPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(reportPath), &quot;findings.xlsx&quot;)&#xA;If Not System.IO.File.Exists(reportPath) OrElse Not System.IO.File.Exists(excelPath) Then Throw New System.IO.IOException(&quot;A report artifact is missing.&quot;)&#10;Dim excelLaunch As New System.Diagnostics.ProcessStartInfo(excelPath)&#10;excelLaunch.UseShellExecute = True&#10;System.Diagnostics.Process.Start(excelLaunch)" DisplayName="Generate and verify HTML and Excel" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
+      <ui:InvokeCode ContinueOnError="{x:Null}" Code="Dim callPython As Func(Of String(), Tuple(Of Integer, String, String)) =&#xA;    Function(arguments As String())&#xA;        Dim info As New System.Diagnostics.ProcessStartInfo(python)&#xA;        info.WorkingDirectory = root&#xA;        info.UseShellExecute = False&#xA;        info.CreateNoWindow = True&#xA;        info.RedirectStandardOutput = True&#xA;        info.RedirectStandardError = True&#xA;        For Each argument In arguments&#xA;            info.ArgumentList.Add(If(argument, &quot;&quot;))&#xA;        Next&#xA;        Using child = System.Diagnostics.Process.Start(info)&#xA;            Dim stdout = child.StandardOutput.ReadToEndAsync()&#xA;            Dim stderr = child.StandardError.ReadToEndAsync()&#xA;            If Not child.WaitForExit(360000) Then&#xA;                child.Kill(True)&#xA;                Throw New TimeoutException(&quot;Python command exceeded six minutes.&quot;)&#xA;            End If&#xA;            Return Tuple.Create(child.ExitCode, stdout.GetAwaiter().GetResult(), stderr.GetAwaiter().GetResult())&#xA;        End Using&#xA;    End Function&#xA;Dim result = callPython(New String() {&quot;scripts/run_qa.py&quot;, &quot;--config&quot;, workbook, &quot;--report&quot;, &quot;--out&quot;, outRoot, &quot;--run-id&quot;, runId})&#xA;If result.Item1 &lt;&gt; 0 Then Throw New InvalidOperationException(&quot;Could not build the reports. Check transactions.log.&quot;)&#xA;Using doc = System.Text.Json.JsonDocument.Parse(result.Item2)&#xA;    reportPath = doc.RootElement.GetProperty(&quot;report&quot;).GetString()&#xA;    summary = String.Format(&quot;{0} checks | {1} pass | {2} fail | {3} errors&quot;,&#xA;        doc.RootElement.GetProperty(&quot;checks&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;pass&quot;).GetInt32(),&#xA;        doc.RootElement.GetProperty(&quot;fail&quot;).GetInt32(), doc.RootElement.GetProperty(&quot;error&quot;).GetInt32())&#xA;End Using&#xA;excelPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(reportPath), &quot;findings.xlsx&quot;)&#xA;If Not System.IO.File.Exists(reportPath) OrElse Not System.IO.File.Exists(excelPath) Then Throw New System.IO.IOException(&quot;A report artifact is missing.&quot;)&#xA;Dim excelLaunch As New System.Diagnostics.ProcessStartInfo(excelPath)&#xA;excelLaunch.UseShellExecute = True&#xA;System.Diagnostics.Process.Start(excelLaunch)" DisplayName="Generate and verify HTML and Excel" sap2010:WorkflowViewState.IdRef="InvokeCode_6">
         <ui:InvokeCode.Arguments>
           <InArgument x:TypeArguments="x:String" x:Key="root">[root]</InArgument>
           <InArgument x:TypeArguments="x:String" x:Key="python">[python]</InArgument>
@@ -281,6 +221,3 @@
     </Sequence>
   </Sequence>
 </Activity>
-
-
-

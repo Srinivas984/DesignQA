@@ -1,0 +1,64 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="FigmaFrameComparison" VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="Main_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
+      <x:String>GlobalConstantsNamespace</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.Common</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Drawing.Primitives</AssemblyReference>
+      <AssemblyReference>System.Drawing.Common</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.Diagnostics.Process</AssemblyReference>
+      <AssemblyReference>System.Text.Json</AssemblyReference>
+      <AssemblyReference>System.Net.Mail</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Figma frame verification in UiPath">
+ <Sequence.Variables><Variable x:TypeArguments="x:String" Name="runDirectory"/><Variable x:TypeArguments="x:String" Name="excelPath"/><Variable x:TypeArguments="x:String" Name="figmaUrl"/></Sequence.Variables>
+ <ui:InputDialog DisplayName="Ask for the Figma URL" Title="DesignQA" Label="Paste a Figma design URL. This workflow compares its saved frame exports."><ui:InputDialog.Result><OutArgument x:TypeArguments="x:String">[figmaUrl]</OutArgument></ui:InputDialog.Result></ui:InputDialog><WriteLine DisplayName="Identify Figma inputs" Text="[figmaUrl]"/>
+ <ui:InvokeCode DisplayName="Prepare unique run and compare Figma data" Language="VBNet" Code="Dim root = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PROJECT_PATH&quot;)&#10;If String.IsNullOrWhiteSpace(root) Then&#10; Dim folder As New System.IO.DirectoryInfo(Environment.CurrentDirectory)&#10; While folder IsNot Nothing AndAlso Not System.IO.File.Exists(System.IO.Path.Combine(folder.FullName, &quot;uipath&quot;, &quot;compare_frames.py&quot;))&#10;  folder = folder.Parent&#10; End While&#10; If folder Is Nothing Then Throw New InvalidOperationException(&quot;Set DESIGNQA_PROJECT_PATH to the project folder.&quot;)&#10; root = folder.FullName&#10;End If&#10;Dim python = Environment.GetEnvironmentVariable(&quot;DESIGNQA_PYTHON&quot;)&#10;If String.IsNullOrWhiteSpace(python) Then python = System.IO.Path.Combine(root, &quot;.venv&quot;, &quot;Scripts&quot;, &quot;python.exe&quot;)&#10;Dim address As Uri = Nothing&#10;If Not Uri.TryCreate(If(figmaUrl, &quot;&quot;).Trim(), UriKind.Absolute, address) OrElse address.Scheme &lt;&gt; &quot;https&quot; OrElse (address.Host &lt;&gt; &quot;www.figma.com&quot; AndAlso address.Host &lt;&gt; &quot;figma.com&quot;) Then Throw New InvalidOperationException(&quot;Enter a valid Figma design URL.&quot;)&#10;Dim segments = address.AbsolutePath.Trim(&quot;/&quot;c).Split(&quot;/&quot;c)&#10;If segments.Length &lt; 2 OrElse (segments(0) &lt;&gt; &quot;design&quot; AndAlso segments(0) &lt;&gt; &quot;file&quot;) Then Throw New InvalidOperationException(&quot;Enter a Figma design URL.&quot;)&#10;Dim input As String = Nothing&#10;For Each candidate In System.IO.Directory.GetDirectories(System.IO.Path.Combine(root, &quot;Output&quot;))&#10; Dim metadata = System.IO.Path.Combine(candidate, &quot;source-nodes.json&quot;)&#10; If Not System.IO.File.Exists(metadata) Then Continue For&#10; Using source = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(metadata))&#10;  If source.RootElement.GetProperty(&quot;fileKey&quot;).GetString() = segments(1) Then&#10;   input = candidate&#10;   Exit For&#10;  End If&#10; End Using&#10;Next&#10;If input Is Nothing Then Throw New InvalidOperationException(&quot;No saved frame export matches this Figma file. Export its comparison frames first.&quot;)&#10;If Not System.IO.File.Exists(System.IO.Path.Combine(input, &quot;source-nodes.json&quot;)) Then Throw New InvalidOperationException(&quot;Exported Figma source data is missing.&quot;)&#10;runDirectory = System.IO.Path.Combine(root, &quot;Output&quot;, &quot;uipath&quot;, &quot;figma_&quot; &amp; Guid.NewGuid().ToString(&quot;N&quot;))&#10;System.IO.Directory.CreateDirectory(System.IO.Path.Combine(runDirectory, &quot;images&quot;))&#10;System.IO.File.Copy(System.IO.Path.Combine(input, &quot;source-nodes.json&quot;), System.IO.Path.Combine(runDirectory, &quot;source-nodes.json&quot;))&#10;For Each name In New String() {&quot;design.png&quot;, &quot;comparison.png&quot;}&#10; System.IO.File.Copy(System.IO.Path.Combine(input, &quot;images&quot;, name), System.IO.Path.Combine(runDirectory, &quot;images&quot;, name))&#10;Next&#10;Dim info As New System.Diagnostics.ProcessStartInfo(python)&#10;info.WorkingDirectory = root&#10;info.UseShellExecute = False&#10;info.CreateNoWindow = True&#10;info.RedirectStandardOutput = True&#10;info.RedirectStandardError = True&#10;For Each argument In New String() {&quot;uipath/compare_frames.py&quot;, runDirectory, &quot;--json-only&quot;}&#10; info.ArgumentList.Add(argument)&#10;Next&#10;Using child = System.Diagnostics.Process.Start(info)&#10; Dim output = child.StandardOutput.ReadToEndAsync()&#10; Dim errors = child.StandardError.ReadToEndAsync()&#10; If Not child.WaitForExit(120000) Then&#10;  child.Kill(True)&#10;  Throw New TimeoutException(&quot;Figma comparison timed out.&quot;)&#10; End If&#10; If child.ExitCode &lt;&gt; 0 Then Throw New InvalidOperationException(&quot;Frame comparison failed.&quot;)&#10;End Using"><ui:InvokeCode.Arguments><InArgument x:TypeArguments="x:String" x:Key="figmaUrl">[figmaUrl]</InArgument><OutArgument x:TypeArguments="x:String" x:Key="runDirectory">[runDirectory]</OutArgument></ui:InvokeCode.Arguments></ui:InvokeCode>
+ <WriteLine DisplayName="Log the evidence folder" Text="[runDirectory]"/>
+ <ui:InvokeCode DisplayName="Create Excel workbook and populate Findings and Summary" Language="VBNet" Code="Dim getValue As Func(Of Object, String, Object(), Object) =&#10; Function(target, name, args) Microsoft.VisualBasic.Interaction.CallByName(target, name, Microsoft.VisualBasic.CallType.Get, args)&#10;Dim callMethod As Func(Of Object, String, Object(), Object) =&#10; Function(target, name, args) Microsoft.VisualBasic.Interaction.CallByName(target, name, Microsoft.VisualBasic.CallType.Method, args)&#10;Dim setValue As Action(Of Object, String, Object) =&#10; Sub(target, name, value)&#10;  Microsoft.VisualBasic.Interaction.CallByName(target, name, Microsoft.VisualBasic.CallType.Let, value)&#10; End Sub&#10;Dim excel As Object = Microsoft.VisualBasic.Interaction.CreateObject(&quot;Excel.Application&quot;)&#10;Dim book As Object = Nothing&#10;Try&#10; book = callMethod(getValue(excel, &quot;Workbooks&quot;, {}), &quot;Add&quot;, {})&#10; Dim sheets = getValue(book, &quot;Worksheets&quot;, {})&#10; Dim sheet = getValue(sheets, &quot;Item&quot;, {1})&#10; setValue(sheet, &quot;Name&quot;, &quot;Findings&quot;)&#10; Dim cells = getValue(sheet, &quot;Cells&quot;, {})&#10; Dim put As Action(Of Object, Integer, Integer, Object) =&#10;  Sub(target, row, col, value)&#10;   Dim cell = getValue(getValue(target, &quot;Cells&quot;, {}), &quot;Item&quot;, {row, col})&#10;   setValue(cell, &quot;NumberFormat&quot;, &quot;@&quot;)&#10;   setValue(cell, &quot;Value&quot;, value)&#10;  End Sub&#10; Dim headers = New String() {&quot;Page&quot;, &quot;Width&quot;, &quot;Element&quot;, &quot;Category&quot;, &quot;Property&quot;, &quot;Expected&quot;, &quot;Actual&quot;, &quot;Severity&quot;}&#10; For i As Integer = 0 To headers.Length - 1&#10;  put(sheet, 1, i + 1, headers(i))&#10; Next&#10; Using doc = System.Text.Json.JsonDocument.Parse(System.IO.File.ReadAllText(System.IO.Path.Combine(runDirectory, &quot;result.json&quot;)))&#10;  Dim check = doc.RootElement.GetProperty(&quot;check&quot;)&#10;  Dim row As Integer = 2&#10;  For Each finding In check.GetProperty(&quot;findings&quot;).EnumerateArray()&#10;   Dim keys = New String() {&quot;page&quot;, &quot;breakpoint&quot;, &quot;label&quot;, &quot;category&quot;, &quot;property&quot;, &quot;expected&quot;, &quot;actual&quot;, &quot;severity&quot;}&#10;   For col As Integer = 0 To keys.Length - 1&#10;    put(sheet, row, col + 1, finding.GetProperty(keys(col)).ToString())&#10;   Next&#10;   row += 1&#10;  Next&#10;  callMethod(getValue(sheet, &quot;Columns&quot;, {}), &quot;AutoFit&quot;, {})&#10;  Dim summary = callMethod(sheets, &quot;Add&quot;, {})&#10;  setValue(summary, &quot;Name&quot;, &quot;Summary&quot;)&#10;  put(summary,1,1,&quot;Figma frame comparison&quot;)&#10;  put(summary,2,1,&quot;Result&quot;)&#10;  put(summary,2,2,check.GetProperty(&quot;status&quot;).GetString())&#10;  put(summary,3,1,&quot;Visual similarity&quot;)&#10;  put(summary,3,2,(100 * check.GetProperty(&quot;ssim&quot;).GetDouble()).ToString(&quot;F2&quot;) &amp; &quot;%&quot;)&#10;  put(summary,4,1,&quot;Findings&quot;)&#10;  put(summary,4,2,(row - 2).ToString())&#10;  put(summary,5,1,&quot;Scope&quot;)&#10;  put(summary,5,2,&quot;Saved Figma frame exports selected by entered URL. Website checks unverified.&quot;)&#10;  callMethod(getValue(summary,&quot;Columns&quot;,{}),&quot;AutoFit&quot;,{})&#10; End Using&#10; excelPath = System.IO.Path.Combine(runDirectory,&quot;findings.xlsx&quot;)&#10; callMethod(book,&quot;SaveAs&quot;,{excelPath,51})&#10; setValue(excel,&quot;Visible&quot;,True)&#10;Catch&#10; If book IsNot Nothing Then callMethod(book,&quot;Close&quot;,{False})&#10; callMethod(excel,&quot;Quit&quot;,{})&#10; Throw&#10;End Try"><ui:InvokeCode.Arguments><InArgument x:TypeArguments="x:String" x:Key="runDirectory">[runDirectory]</InArgument><OutArgument x:TypeArguments="x:String" x:Key="excelPath">[excelPath]</OutArgument></ui:InvokeCode.Arguments></ui:InvokeCode>
+ <WriteLine DisplayName="Show workbook saved by UiPath" Text="[excelPath]"/>
+ </Sequence>
+</Activity>

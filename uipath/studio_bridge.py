@@ -18,10 +18,22 @@ from figma_client import download_image, extract_tokens
 from scripts import run_qa
 
 
+def configured_token():
+    token = os.getenv("FIGMA_TOKEN", "").strip()
+    if not token and sys.platform == "win32":
+        import winreg
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as environment:
+                token = str(winreg.QueryValueEx(environment, "FIGMA_TOKEN")[0]).strip()
+        except OSError:
+            pass
+    return token
+
+
 def prepare(args):
     directory = Path(args.workbook).parent
     directory.mkdir(parents=True, exist_ok=True)
-    widths = [int(width) for width in args.widths.split(",")]
+    widths = [] if args.widths == "auto" else [int(width) for width in args.widths.split(",")]
     pages, mappings, coverage = [], [], {}
     if args.mode == "demo":
         variants = [("Baseline", "good"), ("Seeded defects", "buggy")]
@@ -38,12 +50,22 @@ def prepare(args):
     else:
         key, preferred = figma_url(args.figma)
         live_url(args.live, resolve=True)
-        token = os.getenv("FIGMA_TOKEN", "").strip()
+        token = configured_token()
         if not token:
-            raise BusinessError("Set FIGMA_TOKEN in the Studio process environment before using Figma mode.")
+            raise BusinessError("One-time setup required: configure FIGMA_TOKEN as a Windows user environment variable. The Figma connection in chat does not provide credentials to UiPath.")
         if token in args.figma or token in args.live:
             raise BusinessError("Remove the Figma token from the input URLs.")
         frames = discover(key, preferred, token)
+        if args.widths == "auto":
+            chosen = next((frame for frame in frames if frame["id"] == preferred), None)
+            if chosen is None and len(frames) == 1:
+                chosen = frames[0]
+            if chosen is None:
+                raise BusinessError("Select the reference frame inside Figma, choose Copy link to selection, and use that link. The supplied page link contains multiple possible frames.")
+            if not 320 <= chosen["width"] <= 2560:
+                raise BusinessError("The selected frame width must be between 320 and 2560 px.")
+            preferred = chosen["id"]
+            widths = [chosen["width"]]
         selected = {}
         for width in widths:
             supplied = args.desktop_frame if width == 1440 else args.mobile_frame
